@@ -13,7 +13,7 @@ func TestDive(t *testing.T) {
 	}
 	defer route.Close()
 
-	t.Run("amount of increasing depth, three measurements full workflow", func(t *testing.T) {
+	t.Run("dive", func(t *testing.T) {
 		got := Dive(route)
 		want := 150
 		if want != got {
@@ -29,7 +29,7 @@ func TestAdvancedDive(t *testing.T) {
 	}
 	defer route.Close()
 
-	t.Run("amount of increasing depth, three measurements full workflow", func(t *testing.T) {
+	t.Run("advanced dive", func(t *testing.T) {
 		got := AdvancedDive(route)
 		want := 900
 		if want != got {
