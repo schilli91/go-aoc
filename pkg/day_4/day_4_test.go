@@ -1,4 +1,4 @@
-package day_X
+package day_4
 
 import (
 	"log"
@@ -6,16 +6,16 @@ import (
 	"testing"
 )
 
-func TestDayX(t *testing.T) {
+func TestDay4(t *testing.T) {
 	t.Run("test", func(t *testing.T) {
-		route, err := os.Open("test_data.txt")
+		data, err := os.Open("test_data.txt")
 		if err != nil {
 			log.Fatal(err)
 		}
-		defer route.Close()
+		defer data.Close()
 
-		got := 0
-		want := 150
+		got := PlayBingo(data)
+		want := 4512
 		if want != got {
 			t.Errorf("Incorrect value: got %d, want %d\n\n", got, want)
 		}

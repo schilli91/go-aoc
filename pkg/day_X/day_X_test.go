@@ -8,11 +8,11 @@ import (
 
 func TestDayX(t *testing.T) {
 	t.Run("test", func(t *testing.T) {
-		route, err := os.Open("test_data.txt")
+		data, err := os.Open("test_data.txt")
 		if err != nil {
 			log.Fatal(err)
 		}
-		defer route.Close()
+		defer data.Close()
 
 		got := 0
 		want := 150

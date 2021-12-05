@@ -9,11 +9,11 @@ import (
 func Run() {
 	day := 0
 	fmt.Printf("Day %d\n", day)
-	route, err := os.Open(fmt.Sprintf("pkg/day_%d/puzzle_input.txt", day))
+	data, err := os.Open(fmt.Sprintf("pkg/day_%d/puzzle_input.txt", day))
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer route.Close()
+	defer data.Close()
 
 	fmt.Printf("Day %d\n", day)
 }
