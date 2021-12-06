@@ -7,7 +7,7 @@ import (
 )
 
 func TestDay4(t *testing.T) {
-	t.Run("test play bingo", func(t *testing.T) {
+	t.Run("test play bingo, first winning card", func(t *testing.T) {
 		data, err := os.Open("test_data.txt")
 		if err != nil {
 			log.Fatal(err)
@@ -16,8 +16,23 @@ func TestDay4(t *testing.T) {
 
 		values, cards := LoadBingoCards(data)
 
-		got := PlayBingo(values, cards)
+		got := PlayBingo(values, cards, false)
 		want := 4512
+		if want != got {
+			t.Errorf("Incorrect value: got %d, want %d\n\n", got, want)
+		}
+	})
+	t.Run("test play bingo, last winning card", func(t *testing.T) {
+		data, err := os.Open("test_data.txt")
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer data.Close()
+
+		values, cards := LoadBingoCards(data)
+
+		got := PlayBingo(values, cards, true)
+		want := 1924
 		if want != got {
 			t.Errorf("Incorrect value: got %d, want %d\n\n", got, want)
 		}
@@ -93,6 +108,21 @@ func TestDay4(t *testing.T) {
 		}
 		got := b.Bingo()
 		want := false
+		if want != got {
+			t.Errorf("Incorrect value: got %v, want %v\n\n", got, want)
+		}
+	})
+	t.Run("test bingo, no bingo", func(t *testing.T) {
+		b := new(BingoCard)
+		b.checks = [5][5]bool{
+			{false, false, true, true, false},
+			{false, true, true, true, true},
+			{true, true, true, true, true},
+			{false, true, false, false, true},
+			{false, false, false, false, false},
+		}
+		got := b.Bingo()
+		want := true
 		if want != got {
 			t.Errorf("Incorrect value: got %v, want %v\n\n", got, want)
 		}

@@ -33,6 +33,7 @@ func (card *BingoCard) checkCard(value string) {
 			}
 		}
 	}
+	//fmt.Printf("%v\n", card.checks)
 }
 
 func (card BingoCard) Bingo() bool {
@@ -70,8 +71,11 @@ func Run() {
 
 	values, cards := LoadBingoCards(data)
 
-	score := PlayBingo(values, cards)
-	fmt.Printf("The final Bingo score is %d\n", score)
+	firstScore := PlayBingo(values, cards, false)
+	fmt.Printf("The final Bingo score of the first winning card is %d\n", firstScore)
+
+	lastScore := PlayBingo(values, cards, true)
+	fmt.Printf("The final Bingo score of the last winning card is %d\n", lastScore)
 }
 
 func LoadBingoCards(data *os.File) ([]string, []BingoCard) {
@@ -119,17 +123,27 @@ func (card BingoCard) finalScore(lastValue int) int {
 				total += item
 			}
 		}
-
 	}
-	return 0
+	return total * lastValue
 }
 
-func PlayBingo(values []string, cards []BingoCard) int {
-
-	for _, card := range cards {
-		for _, value := range values {
+func PlayBingo(values []string, cards []BingoCard, lastCard bool) int {
+	won := []int{}
+	for _, value := range values {
+		for idx := range cards {
+			card := &cards[idx]
 			card.checkCard(value)
+
 			if card.Bingo() {
+				if lastCard {
+					if contains(won, idx) {
+						continue
+					}
+					won = append(won, idx)
+					if len(won) != len(cards) {
+						continue
+					}
+				}
 				lastValue, err := strconv.Atoi(value)
 				if err != nil {
 					log.Fatal(err)
@@ -139,4 +153,13 @@ func PlayBingo(values []string, cards []BingoCard) int {
 		}
 	}
 	return 0
+}
+
+func contains(haystack []int, needle int) bool {
+	for _, i := range haystack {
+		if i == needle {
+			return true
+		}
+	}
+	return false
 }
