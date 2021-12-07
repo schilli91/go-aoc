@@ -14,8 +14,36 @@ func TestDayX(t *testing.T) {
 		}
 		defer data.Close()
 
-		got := HydrothermalVents(data)
+		got := HydrothermalVents(data, true)
 		want := 5
+		if want != got {
+			t.Errorf("Incorrect value: got %d, want %d\n\n", got, want)
+		}
+	})
+	t.Run("test hydro thermal vents, puzzle input", func(t *testing.T) {
+		//t.Skip("Skip")
+		data, err := os.Open("puzzle_input.txt")
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer data.Close()
+
+		got := HydrothermalVents(data, true)
+		want := 5576
+		if want != got {
+			t.Errorf("Incorrect value: got %d, want %d\n\n", got, want)
+		}
+	})
+
+	t.Run("test hydro thermal vents with diagonals", func(t *testing.T) {
+		data, err := os.Open("test_data.txt")
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer data.Close()
+
+		got := HydrothermalVents(data, false)
+		want := 12
 		if want != got {
 			t.Errorf("Incorrect value: got %d, want %d\n\n", got, want)
 		}
@@ -36,7 +64,10 @@ func TestDayX(t *testing.T) {
 	t.Run("test points from line", func(t *testing.T) {
 		s := "3,4 -> 1,4"
 		l := NewLineFromStr(s)
-		got := l.LinePoints()
+		got, err := l.LinePoints(true)
+		if err != nil {
+			log.Fatal(err)
+		}
 
 		want := []Point{
 			{x: 1, y: 4},
@@ -49,6 +80,19 @@ func TestDayX(t *testing.T) {
 
 		if !comparePointSlices(want, got) {
 			t.Errorf("Incorrect value: got %v, want %v\n\n", got, want)
+		}
+	})
+	t.Run("test find max dimension", func(t *testing.T) {
+		data, err := os.Open("test_data.txt")
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer data.Close()
+
+		got := FindMaxDimension(data)
+		want := 9 + 1
+		if want != got {
+			t.Errorf("Incorrect value: got %d, want %d\n\n", got, want)
 		}
 	})
 }
