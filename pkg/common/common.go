@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"strings"
 )
 
 func ReadLinesInt(measurements *os.File) []int {
@@ -34,4 +35,19 @@ func ReadLinesString(measurements *os.File) []string {
 		log.Fatal(err)
 	}
 	return lines
+}
+
+func ReadCommaSeparatedLineInt(data *os.File) []int {
+	s := ReadLinesString(data)
+	numsStr := strings.Split(s[0], ",")
+	nums := []int{}
+
+	for _, f := range numsStr {
+		fish, err := strconv.Atoi(f)
+		if err != nil {
+			log.Fatal(err)
+		}
+		nums = append(nums, fish)
+	}
+	return nums
 }
