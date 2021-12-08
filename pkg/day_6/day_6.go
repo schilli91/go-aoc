@@ -25,83 +25,40 @@ func Run() {
 
 	s := LoadSwarm(data)
 	days := 80
-	numFish := LanternfishLife(s, days)
+	numFish := LanternFishLife(s, days)
 
 	fmt.Printf("After %d days, there are %d fish.\n", days, numFish)
+	moreDays := 256
+	numImmortalFish := LanternFishLife(s, moreDays)
+
+	fmt.Printf("After %d days, there are %d fish.\n", moreDays, numImmortalFish)
 }
 
-func LanternfishLife(swarm []int, days int) int {
-	numFish := len(swarm)
-	for d := 0; d < days; d++ {
-		babyFish := []int{}
-		for i, f := range swarm {
-			if f == 0 {
-				babyFish = append(babyFish, 8)
-				swarm[i] = 6
-			} else {
-				swarm[i] = f - 1
-			}
-		}
-		if len(babyFish) > 0 {
-			// TODO: Vlt als goroutine?
-			numFish += LanternfishLife(babyFish, days-d-1)
-		}
-		// if d == 150 || d == 200 || d == 220 {
-		// 	fmt.Printf("After %d days, there are %d fish.\n", d+1, numFish)
-		// }
+func LanternFishLife(swarm []int, days int) int64 {
+	fish := LoadFish(swarm)
+	for i := 0; i < days; i++ {
+		b := fish[0]
+		fish = fish[1:]
+		fish[6] += b
+		fish = append(fish, b)
 	}
-
-	return numFish
+	return CountFish(fish)
 }
 
-func GoLanternfishLife(swarm []int, days int, ch chan int) {
-	numFish := len(swarm)
-	for d := 0; d < days; d++ {
-		babyFish := []int{}
-		for i, f := range swarm {
-			if f == 0 {
-				babyFish = append(babyFish, 8)
-				swarm[i] = 6
-			} else {
-				swarm[i] = f - 1
-			}
-		}
-		if len(babyFish) > 0 {
-			// TODO: Vlt als goroutine?
-			go LanternfishLife(babyFish, days-d-1)
-			numBabies := <-ch
-			numFish += numBabies
-		}
-		// if d == 150 || d == 200 || d == 220 {
-		// 	fmt.Printf("After %d days, there are %d fish.\n", d+1, numFish)
-		// }
+func LoadFish(swarm []int) []int64 {
+	s := make([]int64, 9)
+	for _, f := range swarm {
+		s[f] += 1
 	}
-	ch <- numFish
-	return
+	return s
 }
 
-//1171199621
-//1073741823.5
-//2147483647
-
-func OLDLanternfishLife(swarm Swarm, days int) int {
-	for d := 0; d < days; d++ {
-		babyFish := []int{}
-		for i, f := range swarm.fish {
-			if f == 0 {
-				babyFish = append(babyFish, 8)
-				swarm.fish[i] = 6
-			} else {
-				swarm.fish[i] = f - 1
-			}
-		}
-		swarm.fish = append(swarm.fish, babyFish...)
-		if d%50 == 0 {
-			fmt.Printf("After %d days, there are %d fish.\n", d+1, len(swarm.fish))
-		}
+func CountFish(fish []int64) int64 {
+	total := int64(0)
+	for _, f := range fish {
+		total += f
 	}
-
-	return len(swarm.fish)
+	return total
 }
 
 func LoadSwarm(data *os.File) []int {
