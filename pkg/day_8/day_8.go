@@ -25,6 +25,9 @@ func Run() {
 	n := CountUniqueDigits(d)
 
 	fmt.Printf("There are %d unique digits (1, 4, 7, 8) in the outputs.\n", n)
+
+	o := DecodeDisplays(d)
+	fmt.Printf("The sum of outputs is %d.\n", o)
 }
 
 type Display struct {
@@ -79,12 +82,7 @@ func (display Display) Decode() int {
 
 	for _, o := range display.outputs {
 		for i, d := range display.digits {
-			if countSegmentsInDigit(o, d) == len(d) {
-				// v, err := getValue(i, wiring)
-				// if err != nil {
-				// 	log.Fatal("Failed to get value.")
-				// }
-				// outputDigits = append(outputDigits, v)
+			if countSegmentsInDigit(o, d) == len(o) && countSegmentsInDigit(o, d) == len(d) {
 				outputDigits = append(outputDigits, wiring[i])
 				break
 			}

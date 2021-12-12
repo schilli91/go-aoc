@@ -25,7 +25,7 @@ func TestDay8(t *testing.T) {
 		}
 	})
 	t.Run("test decode display", func(t *testing.T) {
-		t.Skip("skip")
+		//t.Skip("skip")
 		data, err := os.Open("test_data.txt")
 		if err != nil {
 			log.Fatal(err)
