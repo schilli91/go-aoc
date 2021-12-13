@@ -13,7 +13,8 @@ func TestDay9(t *testing.T) {
 			log.Fatal(err)
 		}
 		defer data.Close()
-		m := LocalMinima(data)
+		heightMap := HeightMap(data)
+		m := LocalMinima(heightMap)
 		got := RiskLevel(m)
 		want := 15
 		if want != got {
@@ -26,7 +27,8 @@ func TestDay9(t *testing.T) {
 			log.Fatal(err)
 		}
 		defer data.Close()
-		m := LocalMinima(data)
+		heightMap := HeightMap(data)
+		m := LocalMinima(heightMap)
 		got := RiskLevel(m)
 		want := 425
 		if want != got {
