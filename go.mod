@@ -1,3 +1,3 @@
-module github.com/schilli91/aoc2021
+module github.com/schilli91/go-aoc
 
 go 1.17
