@@ -8,6 +8,14 @@ import (
 	"strings"
 )
 
+func OpenInputFile(path string) *os.File {
+	input, err := os.Open(path)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return input
+}
+
 func ReadLinesInt(measurements *os.File) []int {
 	var lines []int
 	scanner := bufio.NewScanner(measurements)
