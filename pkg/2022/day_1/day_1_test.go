@@ -41,7 +41,8 @@ func TestGetThreeMaxCalories(t *testing.T) {
 	defer input.Close()
 	calories := getCaloriesPerElf(*input)
 
-	got := getThreeMaxCalories(calories)
+	maxThreeCalories := getThreeMaxCalories(calories)
+	got := sum(maxThreeCalories)
 	want := 45000
 	if got != want {
 		t.Errorf("Mismatch of max calories: got %v, want %v", got, want)
