@@ -61,7 +61,7 @@ func TestGetTournamentScore(t *testing.T) {
 }
 
 func TestGetCorrectedTournamentScore(t *testing.T) {
-	day := 1
+	day := 2
 	fmt.Printf("Day %d of AOC 2022.\n", day)
 
 	input := common.OpenInputFile("test_data.txt")
