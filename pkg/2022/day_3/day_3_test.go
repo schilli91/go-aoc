@@ -67,3 +67,25 @@ func TestGetPriorityOfSharedItems(t *testing.T) {
 		t.Errorf("wrong priority: got %d, want %d", got, want)
 	}
 }
+
+func TestGetBadge(t *testing.T) {
+	a := NewRucksack("vJrwpWtwJgWrhcsFMMfFFhFp")
+	b := NewRucksack("jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL")
+	c := NewRucksack("PmmdzqPrVvPwwTWBwg")
+
+	got := getBadge(*a, *b, *c)
+	want := []rune("r")
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("wrong badge: got %s, want %s", string(got), string(want))
+	}
+}
+
+func TestGetPriorityOfBadgeItems(t *testing.T) {
+	input := common.OpenInputFile("test_data.txt")
+	defer input.Close()
+	got := getPriorityOfBadgeItems(common.ReadLinesString(input))
+	want := 70
+	if got != want {
+		t.Errorf("wrong priority: got %d, want %d", got, want)
+	}
+}

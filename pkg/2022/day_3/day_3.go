@@ -7,23 +7,28 @@ import (
 )
 
 func Run() {
-	day := 1
+	day := 3
 	fmt.Printf("Day %d of AOC 2022.\n", day)
 
 	input := common.OpenInputFile("/Users/moritzschillinger/dev/go/advent-of-code/pkg/2022/day_3/puzzle_input.txt")
 	defer input.Close()
-
-	p := getPriorityOfSharedItems(common.ReadLinesString(input))
+	lines := common.ReadLinesString(input)
+	p := getPriorityOfSharedItems(lines)
 	fmt.Printf("The total priority of shared item types is %d.\n", p)
+
+	b := getPriorityOfBadgeItems(lines)
+	fmt.Printf("The total priority of badge item is %d.\n", b)
 }
 
 type Rucksack struct {
+	content           string
 	firstCompartment  string
 	secondCompartment string
 }
 
 func NewRucksack(content string) *Rucksack {
 	r := new(Rucksack)
+	r.content = content
 	r.firstCompartment = content[:len(content)/2]
 	r.secondCompartment = content[len(content)/2:]
 	return r
@@ -67,11 +72,43 @@ func getItemPriority(items []rune) int {
 	return p
 }
 
+func getBadge(a, b, c Rucksack) []rune {
+	candidates := make([]rune, 0)
+	for _, i := range a.content {
+		if contains([]rune(b.content), i) {
+			candidates = append(candidates, i)
+		}
+	}
+
+	res := make([]rune, 0)
+	for _, i := range candidates {
+		if contains([]rune(c.content), i) && !contains(res, i) {
+			res = append(res, i)
+		}
+	}
+
+	return res
+}
+
 func getPriorityOfSharedItems(rucksackContents []string) int {
 	prio := 0
 	for _, content := range rucksackContents {
 		r := NewRucksack(content)
 		s := r.findSharedItemType()
+		p := getItemPriority(s)
+		prio += p
+	}
+	return prio
+}
+
+func getPriorityOfBadgeItems(rucksackContents []string) int {
+	prio := 0
+	for i := 0; i < len(rucksackContents); i += 3 {
+		a := NewRucksack(rucksackContents[i])
+		b := NewRucksack(rucksackContents[i+1])
+		c := NewRucksack(rucksackContents[i+2])
+
+		s := getBadge(*a, *b, *c)
 		p := getItemPriority(s)
 		prio += p
 	}
