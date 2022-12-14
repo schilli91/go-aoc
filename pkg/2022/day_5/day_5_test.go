@@ -141,6 +141,39 @@ func TestExecInstruction(t *testing.T) {
 	}
 }
 
+func TestExecInstruction9001(t *testing.T) {
+	d := NewStack()
+	d.push(&Crate{value: 'Z'})
+	d.push(&Crate{value: 'N'})
+	d.push(&Crate{value: 'D'})
+
+	e := NewStack()
+	e.push(&Crate{value: 'M'})
+	e.push(&Crate{value: 'C'})
+
+	f := NewStack()
+	f.push(&Crate{value: 'P'})
+	given := NewSupply([]Stack{*d, *e, *f})
+	given.exec9001(Instruction{amount: 3, from: 1, to: 3})
+	got := given
+
+	a := NewStack()
+
+	b := NewStack()
+	b.push(&Crate{value: 'M'})
+	b.push(&Crate{value: 'C'})
+
+	c := NewStack()
+	c.push(&Crate{value: 'P'})
+	c.push(&Crate{value: 'Z'})
+	c.push(&Crate{value: 'N'})
+	c.push(&Crate{value: 'D'})
+	want := NewSupply([]Stack{*a, *b, *c})
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("wrong instruction execution: \ngot \t%v, \nwant \t%v", got, want)
+	}
+}
+
 func TestPerformOperations(t *testing.T) {
 	input := common.OpenInputFile("test_data.txt")
 	defer input.Close()

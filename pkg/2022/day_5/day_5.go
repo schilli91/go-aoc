@@ -20,15 +20,10 @@ func Run() {
 	s := performOperations(lines)
 	c := s.getTopCrates()
 	fmt.Printf("The top crates are: %s\n", c)
-	o := 0
-	fmt.Printf("There are %d sections overlapping.\n", o)
 
-	/* TRIES
-	HBFBZLVWQ
-	ZLVBQBWFH
-	BZQFLVHBW
-	WQBHBFZLV
-	*/
+	s9001 := performOperations9001(lines)
+	o := s9001.getTopCrates()
+	fmt.Printf("The top crates with 9001 are: %s\n", o)
 }
 
 type Supply struct {
@@ -82,6 +77,21 @@ func (s *Supply) exec(instruction Instruction) {
 		s.stacks[instruction.from] = f
 		s.stacks[instruction.to] = t
 	}
+}
+
+func (s *Supply) exec9001(instruction Instruction) {
+	f := s.stacks[instruction.from]
+	t := s.stacks[instruction.to]
+	transfer := f.crates[len(f.crates)-instruction.amount:]
+	for _, c := range transfer {
+		_, err := f.pop()
+		if err != nil {
+			log.Fatalf("could not pop element from stack: %v", f)
+		}
+		t.push(&c)
+	}
+	s.stacks[instruction.from] = f
+	s.stacks[instruction.to] = t
 }
 
 func (s Supply) getTopCrates() string {
@@ -219,6 +229,16 @@ func performOperations(inputLines []string) *Supply {
 	instructions := getInstructions(inputLines)
 	for _, i := range instructions {
 		supply.exec(i)
+	}
+	fmt.Println(len(instructions))
+	return supply
+}
+
+func performOperations9001(inputLines []string) *Supply {
+	supply := NewSupply(getSupplyStacks(inputLines))
+	instructions := getInstructions(inputLines)
+	for _, i := range instructions {
+		supply.exec9001(i)
 	}
 	fmt.Println(len(instructions))
 	return supply
