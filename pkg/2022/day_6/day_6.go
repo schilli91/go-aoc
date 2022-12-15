@@ -47,12 +47,3 @@ func hasDuplicates(marker string) bool {
 	}
 	return len(set) != len(marker)
 }
-
-func contains(haystack string, needle rune) bool {
-	for _, i := range haystack {
-		if i == needle {
-			return true
-		}
-	}
-	return false
-}
