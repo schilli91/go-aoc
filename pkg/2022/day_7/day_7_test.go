@@ -116,3 +116,34 @@ func TestSumFolderSizes(t *testing.T) {
 		t.Errorf("wrong sum of sizes, \ngot \t%d \nwant \t%d", got, want)
 	}
 }
+
+func TestGetRequiredSpace(t *testing.T) {
+	input := common.OpenInputFile("test_data.txt")
+	defer input.Close()
+	lines := common.ReadLinesString(input)
+	given := NewFolder("dir /")
+	given.populateFileTree(lines)
+	got := given.getRequiredSpace()
+	want := 8381165
+	if got != want {
+		t.Errorf("wrong size, \ngot \t%d \nwant \t%d", got, want)
+	}
+}
+
+func TestTraverseTree(t *testing.T) {
+	input := common.OpenInputFile("test_data.txt")
+	defer input.Close()
+	lines := common.ReadLinesString(input)
+	given := NewFolder("dir /")
+	given.populateFileTree(lines)
+	got := given.traverseTree()
+	want := []int{
+		48381165,
+		94853,
+		584,
+		24933642,
+	}
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("wrong sum of sizes, \ngot \t%v \nwant \t%v", got, want)
+	}
+}

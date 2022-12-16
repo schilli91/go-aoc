@@ -13,14 +13,20 @@ func Run() {
 	day := 7
 	fmt.Printf("Day %d of AOC 2022.\n", day)
 
-	input := common.OpenInputFile(fmt.Sprintf("pkg/2022/day_%d/puzzle_input.txt", day))
+	input := common.OpenInputFile("/Users/moritzschillinger/dev/go/advent-of-code/pkg/2022/day_7/puzzle_input.txt")
 	defer input.Close()
 
 	lines := common.ReadLinesString(input)
 	given := NewFolder("dir /")
 	given.populateFileTree(lines)
 	v := given.sumFolderSizes()
-	fmt.Printf("The sum of folders* sizes is %d\n", v)
+	fmt.Printf("The sum of folders sizes is %d\n", v)
+
+	fmt.Println(given.getRequiredSpace())
+
+	sizes := given.traverseTree()
+	minSizes := dropTooSmall(sizes, given.getRequiredSpace())
+	fmt.Printf("The folder that needs to be deleted has size %d\n", min(minSizes))
 }
 
 type Folder struct {
@@ -125,4 +131,39 @@ func (f Folder) sumFolderSizes() int {
 	}
 
 	return sum
+}
+
+func (f Folder) getRequiredSpace() int {
+	unused := 70000000 - f.size
+	return 30000000 - unused
+}
+
+func (f Folder) traverseTree() []int {
+	sizes := make([]int, 0)
+	sizes = append(sizes, f.size)
+
+	for _, sub := range f.folders {
+		sizes = append(sizes, sub.traverseTree()...)
+	}
+	return sizes
+}
+
+func dropTooSmall(in []int, minSize int) []int {
+	out := make([]int, 0)
+	for _, i := range in {
+		if i > minSize {
+			out = append(out, i)
+		}
+	}
+	return out
+}
+
+func min(v []int) int {
+	min := v[0]
+	for _, i := range v {
+		if i < min {
+			min = i
+		}
+	}
+	return min
 }
